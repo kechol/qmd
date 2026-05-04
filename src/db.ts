@@ -95,3 +95,26 @@ export function loadSqliteVec(db: Database): void {
   }
   _sqliteVecLoad(db);
 }
+
+function getFtsExtensionPaths(): string[] {
+  const value = process.env.QMD_FTS_EXTENSIONS?.trim();
+  if (!value) return [];
+  return value.split(",").map(s => s.trim()).filter(Boolean);
+}
+
+/**
+ * Load FTS5 tokenizer extensions listed in `QMD_FTS_EXTENSIONS`
+ * (comma-separated absolute paths). No-op when unset. Throws on load
+ * failure — misconfiguration should surface immediately rather than
+ * silently fall back to the default tokenizer.
+ */
+export function loadFtsExtensions(db: Database): void {
+  for (const path of getFtsExtensionPaths()) {
+    try {
+      db.loadExtension(path);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Failed to load FTS extension "${path}": ${message}`);
+    }
+  }
+}

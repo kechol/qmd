@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Changes
+
+- Optional FTS5 tokenizer extensions can now be loaded via
+  `QMD_FTS_EXTENSIONS` (comma-separated absolute paths). Useful for
+  plugging in non-built-in tokenizers like sqlite-vaporetto for Japanese
+  morphological tokenization. The extensions are loaded into the
+  database before `documents_fts` is created, so the registered
+  tokenizer name can be used from `QMD_FTS_TOKENIZER`. Failure to load
+  is fatal so misconfigured paths surface immediately rather than
+  silently falling back to defaults.
+
 ### Fixes
 
 - GPU: respect explicit `QMD_LLAMA_GPU=metal|vulkan|cuda` backend overrides instead of always using auto GPU selection. #529
