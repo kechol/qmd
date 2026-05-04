@@ -797,6 +797,7 @@ llm_cache       -- Cached LLM responses (query expansion, rerank scores)
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `XDG_CACHE_HOME` | `~/.cache` | Cache directory location |
+| `QMD_FTS_EXTENSIONS` | — | Comma-separated absolute paths to SQLite FTS5 loadable extensions (e.g. a Japanese morphological tokenizer). Loaded into the DB before `documents_fts` is created, so the tokenizer they register can be referenced via `QMD_FTS_TOKENIZER`. Failure to load is fatal — the env var is opt-in, so a misconfigured path surfaces immediately. |
 
 ## How It Works
 

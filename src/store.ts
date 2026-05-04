@@ -11,7 +11,7 @@
  *   const store = createStore();
  */
 
-import { openDatabase, loadSqliteVec } from "./db.js";
+import { openDatabase, loadSqliteVec, loadFtsExtensions } from "./db.js";
 import type { Database } from "./db.js";
 import picomatch from "picomatch";
 import { createHash } from "crypto";
@@ -745,6 +745,12 @@ function initializeDatabase(db: Database): void {
     _sqliteVecUnavailableReason = getErrorMessage(err);
     console.warn(_sqliteVecUnavailableReason);
   }
+
+  // FTS5 tokenizer extensions must be loaded before documents_fts is
+  // created — the tokenizer name in CREATE VIRTUAL TABLE has to be
+  // registered when FTS5 parses the statement.
+  loadFtsExtensions(db);
+
   db.exec("PRAGMA journal_mode = WAL");
   db.exec("PRAGMA foreign_keys = ON");
 
